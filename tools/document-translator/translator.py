@@ -23,7 +23,7 @@ import docx
 import pdfplumber
 
 try:
-    from deep_translator import GoogleTranslator
+    from deep_translator import GoogleTranslator, MyMemoryTranslator
     _HAS_TRANSLATOR = True
 except ImportError:
     _HAS_TRANSLATOR = False
@@ -228,25 +228,45 @@ def _fallback_translate(text: str) -> str:
     return " ".join(out) + "（离线占位翻译，未检测到网络翻译服务）"
 
 
-def translate_batch(sentences: List[str], target_lang: str = "zh-CN") -> List[str]:
+# Providers tried in order, each free and keyless. Different hosts, so one
+# being unreachable (e.g. translate.google.com blocked on some networks)
+# doesn't take the other down with it.
+_PROVIDERS = (
+    ("Google 翻译", lambda target_lang: GoogleTranslator(source="en", target=target_lang)),
+    ("MyMemory", lambda target_lang: MyMemoryTranslator(source="en-GB", target=target_lang)),
+)
+
+
+def translate_batch(sentences: List[str], target_lang: str = "zh-CN"):
+    """Translate all sentences, returning (translations, warning).
+
+    warning is None on success from an online provider; otherwise it names
+    what failed so the caller can surface it instead of silently returning
+    the much lower quality offline fallback.
+    """
     if not sentences:
-        return []
+        return [], None
 
     if _HAS_TRANSLATOR:
-        try:
-            translator = GoogleTranslator(source="en", target=target_lang)
-            results = []
-            # deep-translator's batch endpoint has an input-size limit, so
-            # sentences are sent in modest chunks rather than all at once.
-            chunk_size = 50
-            for i in range(0, len(sentences), chunk_size):
-                chunk = sentences[i:i + chunk_size]
-                results.extend(translator.translate_batch(chunk))
-            return results
-        except Exception as e:
-            print(f"在线翻译失败，使用离线占位翻译: {e}")
+        for name, make_translator in _PROVIDERS:
+            try:
+                translator = make_translator(target_lang)
+                results = []
+                # Providers cap how much text a single request can carry,
+                # so sentences are sent in modest chunks rather than all at once.
+                chunk_size = 50
+                for i in range(0, len(sentences), chunk_size):
+                    chunk = sentences[i:i + chunk_size]
+                    results.extend(translator.translate_batch(chunk))
+                return results, None
+            except Exception as e:
+                print(f"{name} 翻译失败: {e}")
 
-    return [_fallback_translate(s) for s in sentences]
+    warning = (
+        "无法连接任何在线翻译服务（已尝试 Google 翻译、MyMemory），"
+        "当前显示为离线占位翻译（仅少量常见词可用），请检查本机网络/代理设置后重试。"
+    )
+    return [_fallback_translate(s) for s in sentences], warning
 
 
 # ---------------------------------------------------------------------------
@@ -276,7 +296,7 @@ def process_document(file_path: str, ext: str, layout: str = "auto",
         all_sentences.extend(sentences)
         para_sentence_counts.append(len(sentences))
 
-    translations = translate_batch(all_sentences, target_lang)
+    translations, warning = translate_batch(all_sentences, target_lang)
 
     result_paragraphs = []
     idx = 0
@@ -293,7 +313,10 @@ def process_document(file_path: str, ext: str, layout: str = "auto",
             sent_id += 1
         result_paragraphs.append({"sentences": sentences})
 
-    return {"paragraphs": result_paragraphs, "sentence_count": sent_id}
+    result: Dict[str, Any] = {"paragraphs": result_paragraphs, "sentence_count": sent_id}
+    if warning:
+        result["warning"] = warning
+    return result
 
 
 # ---------------------------------------------------------------------------

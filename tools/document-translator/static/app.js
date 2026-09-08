@@ -68,7 +68,11 @@
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '翻译失败');
       renderResult(data);
-      setStatus(`翻译完成，共 ${data.sentence_count} 句`);
+      if (data.warning) {
+        setStatus(`⚠ 翻译完成，共 ${data.sentence_count} 句，但${data.warning}`, true);
+      } else {
+        setStatus(`翻译完成，共 ${data.sentence_count} 句`);
+      }
     } catch (err) {
       setStatus(err.message, true);
     } finally {
