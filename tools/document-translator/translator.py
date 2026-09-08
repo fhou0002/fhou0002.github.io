@@ -36,7 +36,10 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 ALLOWED_EXTENSIONS = {".txt", ".md", ".docx", ".pdf"}
 MAX_CONTENT_LENGTH = 50 * 1024 * 1024  # 50MB
 
-app = Flask(__name__)
+# instance_path is passed explicitly so Flask skips its auto-detection
+# (pkgutil.get_loader), which Python 3.14 removed and would otherwise
+# crash the app at startup when run directly as a script.
+app = Flask(__name__, instance_path=os.path.join(BASE_DIR, "instance"))
 app.config["MAX_CONTENT_LENGTH"] = MAX_CONTENT_LENGTH
 
 # doc_id -> {"path", "ext", "name"}; process runs single-user/local so an
