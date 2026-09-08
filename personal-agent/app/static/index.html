@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<title>Personal Skill Agent</title>
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<div id="app">
+
+  <div class="panel" id="skills-panel">
+    <div class="panel-header">
+      Skills
+      <div>
+        <button class="btn small" id="btn-new-skill">+ New</button>
+        <button class="btn small" id="btn-download-skill">Download</button>
+      </div>
+    </div>
+    <div class="panel-body" id="skills-list"></div>
+  </div>
+
+  <div class="panel" id="viewer-panel">
+    <div class="panel-header">
+      <span id="viewer-title">Select a skill</span>
+      <button class="btn small" id="btn-delete-skill" style="display:none">Delete</button>
+    </div>
+    <div class="panel-body" id="viewer-body">
+      <div class="hint">Click a skill on the left to see its SKILL.md and files.</div>
+    </div>
+  </div>
+
+  <div class="panel" id="chat-panel">
+    <div class="split">
+      <div class="half">
+        <div class="panel-header">Chat <button class="btn small" id="btn-reset">Reset</button></div>
+        <div class="chat-log" id="chat-log"></div>
+        <div class="chat-input">
+          <textarea id="chat-input" rows="2" placeholder="问 agent 做点什么…"></textarea>
+          <button class="btn" id="btn-send">Send</button>
+        </div>
+      </div>
+      <div class="half divider">
+        <div class="panel-header">Invocation log</div>
+        <div class="exec-log" id="exec-log"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="modal-root"></div>
+
+<script src="/app.js"></script>
+</body>
+</html>
