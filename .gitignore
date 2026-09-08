@@ -2,3 +2,7 @@ _site
 .sass-cache
 .jekyll-metadata
 .DS_Store
+
+# document-translator local tool
+tools/document-translator/uploads/
+tools/document-translator/__pycache__/

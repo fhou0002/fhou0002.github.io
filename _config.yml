@@ -58,6 +58,7 @@ exclude:
   - LICENSE.md
   - REDISTRIBUTED.md
   - purgecss.config.js
+  - tools/
 
 # Collections and their defaults
 collections:

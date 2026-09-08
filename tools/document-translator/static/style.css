@@ -1,0 +1,100 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #f5f6f8;
+  color: #1a1a1a;
+}
+
+.topbar { padding: 24px 32px 12px; }
+.topbar h1 { margin: 0 0 4px; font-size: 22px; }
+.subtitle { margin: 0; color: #666; font-size: 14px; }
+
+.upload-panel {
+  margin: 0 32px 16px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.upload-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.file-drop {
+  flex: 1 1 320px;
+  border: 2px dashed #c6cbd4;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  color: #666;
+  transition: border-color .15s, background .15s;
+}
+.file-drop.dragover { border-color: #4a7dfc; background: #eef3ff; }
+
+.options { display: flex; align-items: center; gap: 12px; }
+.option-field { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #444; }
+
+select, button {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #d0d4da;
+  font-size: 14px;
+}
+
+button {
+  background: #4a7dfc;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+button:disabled { background: #b7c4e6; cursor: not-allowed; }
+
+.status { margin: 12px 0 0; font-size: 13px; color: #444; min-height: 16px; }
+.status.error { color: #d33; }
+
+.result-panel {
+  display: flex;
+  gap: 16px;
+  margin: 0 32px 32px;
+  height: calc(100vh - 220px);
+}
+
+.pane {
+  flex: 1;
+  min-width: 0;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pane-header {
+  padding: 12px 16px;
+  font-weight: 600;
+  border-bottom: 1px solid #eee;
+  background: #fafbfc;
+}
+
+.pane-body {
+  padding: 16px 20px;
+  overflow-y: auto;
+  line-height: 1.9;
+  font-size: 15px;
+}
+.pane-body p { margin: 0 0 14px; }
+
+.sentence {
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background-color .12s ease;
+}
+.sentence.highlight { background-color: #fff1a8; }

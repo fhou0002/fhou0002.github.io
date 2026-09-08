@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文档翻译对照工具</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <h1>文档翻译对照工具</h1>
+    <p class="subtitle">上传英文文档，自动生成中英对照，鼠标悬停逐句高亮联动</p>
+  </header>
+
+  <section class="upload-panel" id="uploadPanel">
+    <div class="upload-row">
+      <label class="file-drop" id="fileDrop">
+        <input type="file" id="fileInput" accept=".txt,.md,.docx,.pdf" hidden>
+        <span id="fileLabel">点击选择或拖拽文件（支持 .txt / .docx / .pdf）</span>
+      </label>
+
+      <div class="options">
+        <label class="option-field">
+          原文版式
+          <select id="layoutSelect">
+            <option value="auto" selected>自动检测</option>
+            <option value="one_column">单栏</option>
+            <option value="two_columns">双栏</option>
+          </select>
+        </label>
+        <button id="translateBtn" disabled>开始翻译</button>
+      </div>
+    </div>
+    <p class="status" id="statusMsg"></p>
+  </section>
+
+  <section class="result-panel" id="resultPanel" hidden>
+    <div class="pane" id="paneEn">
+      <div class="pane-header">原文（English）</div>
+      <div class="pane-body" id="bodyEn"></div>
+    </div>
+    <div class="pane" id="paneZh">
+      <div class="pane-header">译文（中文）</div>
+      <div class="pane-body" id="bodyZh"></div>
+    </div>
+  </section>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
